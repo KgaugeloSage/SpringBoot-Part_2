@@ -1,10 +1,19 @@
 package com.company;
 
+/**
+ * User Model with it's attributes
+ */
 public class User {
-    private long id;
-    private String name;
-    private String surname;
+    private final long id;
+    private final String name;
+    private final String surname;
 
+    /**
+     * User constructor to set the attributes
+     * @param id
+     * @param name
+     * @param surname
+     */
     User(long id, String name , String surname){
         this.id = id;
         this.name = name;
