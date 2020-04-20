@@ -3,21 +3,22 @@ package com.company;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestComponent;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest(classes = Main.class)
+@SpringBootTest(classes = Main.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProjectTest {
 
 
-    private final UserServiceImpl userService;
+    @Autowired
+    UserService userService;
 
     @Autowired
-    public ProjectTest(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+    private TestRestTemplate testRestTemplate;
+
 
     @Test
     void addUserTest() {
@@ -40,5 +41,23 @@ public class ProjectTest {
         String name = "Bataung";
         String surname = "MaraT";
         assertEquals(new User(id, name, surname).getId(), userService.getUser(id).getId());
+    }
+
+    @Test
+    void getCachedUserTest(){
+        long id = 176957236573257735L;
+        userService.addUser(id, "Tshidiso", "Khoza");
+        userService.getUser(id);
+        userService.getUser(id);
+        userService.getUser(id);
+        userService.getUser(id);
+
+    }
+
+    @Test
+    void securityTest(){
+        ResponseEntity<String> response = testRestTemplate.withBasicAuth("SageKay","Password#10").getForEntity("/user",String.class);
+        response.getStatusCode();
+
     }
 }
